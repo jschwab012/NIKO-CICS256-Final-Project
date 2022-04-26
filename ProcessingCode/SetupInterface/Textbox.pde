@@ -3,7 +3,7 @@
 */
 public class TEXTBOX {
   // potential TODO: refactor class members to be private
-   public int X = 0, Y = 0, H = 35, W = 200;
+   public float X = 0, Y = 0, H = 35, W = 200;
    public int TEXTSIZE = 24;
    
    // COLORS
@@ -25,7 +25,7 @@ public class TEXTBOX {
       // CREATE OBJECT DEFAULT TEXTBOX
    }
    
-   TEXTBOX(int x, int y, int w, int h) {
+   TEXTBOX(float x, float y, float w, float h) {
       X = x; Y = y; W = w; H = h;
    }
       
