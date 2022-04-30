@@ -95,17 +95,18 @@ void mousePressed() {
   comTextbox.PRESSED(mouseX, mouseY);
   if (comButton.clicked(mouseX, mouseY)) {
       comPort = comTextbox.Text;
-      if (port == null) {
-          //println("Current serial list: ");
-          //printArray(Serial.list());
-          //println("opening bluetooth serial port");
-          try {
-            port = new Serial(this, comPort, 115200);
-          } catch (RuntimeException e) {
-            // TIP: If you get a "Port not found" error, turn your pc bluetooth off then on again
-             println(e.getMessage());
-          }
-      }
+      // PORT OPENING COMMENTED OUT FOR DEBUGGING PURPOSES
+      //if (port == null) {
+      //    //println("Current serial list: ");
+      //    //printArray(Serial.list());
+      //    //println("opening bluetooth serial port");
+      //    try {
+      //      port = new Serial(this, comPort, 115200);
+      //    } catch (RuntimeException e) {
+      //      // TIP: If you get a "Port not found" error, turn your pc bluetooth off then on again
+      //       println(e.getMessage());
+      //    }
+      //}
   }
   
   // mouse clicks for WiFi textboxes/buttons
