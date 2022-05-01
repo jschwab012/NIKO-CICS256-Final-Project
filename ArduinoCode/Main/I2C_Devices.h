@@ -1,7 +1,12 @@
+/**
+ * includes, constants, and functions to handle I2C device interactions
+ */
+
 #ifndef I2C_DEVICES_H
 #define I2C_DEVICES_H
 
 // libraries
+// may need to #include <Wire.h> here
 #include <Arduino.h> // must include Arduino.h because we are in .h/.cpp files now
 #include <LiquidCrystal_I2C.h>
 #include <Adafruit_SSD1306.h>
@@ -10,7 +15,7 @@
 #include <Adafruit_MPU6050.h>
 #include <Adafruit_Sensor.h> // dependency for gyro
 
-// address constants for I2C device declarations
+// constants
 extern const int LCD_ADDR; // 0x3F
 extern const int OLED_ADDR; // 0x3C
 extern const int LIGHT_SENSOR_ADDR; // 0x29
@@ -18,11 +23,11 @@ extern const int IR_PIN; // 33 (for now)
 extern const int GESTURE_ADDR; // 0x43
 //extern const int GYRO_ADDR; // 0x68
 
-// device object declarations
+// objects
 extern LiquidCrystal_I2C LCD; // center LCD
 extern Adafruit_SSD1306 EYE_L; // left eye (NIKO's left)
 extern Adafruit_SSD1306 EYE_R; // right eye (NIKO's right)
-extern VL53L0X SENSOR; // analog light distance sensor
+extern VL53L0X EDGE_SENSOR; // analog light distance sensor
 extern Adafruit_MPU6050 GYRO;
 
 // functions

@@ -1,6 +1,6 @@
 #include "I2C_Devices.h"
 
-// constant initialization
+// globals initialization
 const int LCD_ADDR = 0x3F;
 const int OLED_ADDR = 0x3C;
 const int LIGHT_SENSOR_ADDR = 0x29;
@@ -31,15 +31,15 @@ void LCDPrint(const char* message1, const char* message2) {
   LCD.setCursor(0, 0);
   // print message
   LCD.print(message1);
-  delay(1000);
+//  delay(1000);
   // clears the display to print new message
-  LCD.clear();
+//  LCD.clear();
   
   // set cursor to first column, second row
   LCD.setCursor(0,1);
   LCD.print(message2);
-  delay(1000);
-  LCD.clear(); 
+//  delay(1000);
+//  LCD.clear(); 
 }
 
 // eye functions (some of these are kinda funky cause most of the time, each eye will do the same thing, but we want the option
