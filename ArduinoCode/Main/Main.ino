@@ -46,19 +46,12 @@ void setup() {
 
   // setup connection
   bluetoothInit();
-  if (bluetoothConnected) {
-    bluetoothReadWifiInfo();
-    if (wifiInfoReceived) {
-       wifiInit();
-    } else {
-    Serial.println("WiFi cannot be initialized - missing ssid or password");
-    }
-  } else {
-    Serial.println("Bluetooth connection failed");
-  }
 }
 
 uint8_t gestureData;
 void loop() {
-  // TODO: Confirm whether Wire.begin() is necessary here (don't think it is...?)
+  if (wifiInfoReceived && !wifiConnected) {
+    wifiInit();
+  }
+
 }

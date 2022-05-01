@@ -4,7 +4,7 @@
 const int LCD_ADDR = 0x3F;
 const int OLED_ADDR = 0x3C;
 const int LIGHT_SENSOR_ADDR = 0x29;
-const int IR_PIN = 33;
+const int IR_PIN = 29;
 const int GESTURE_ADDR = 0x43;
 const int GYRO_ADDR = 0x68;
 
@@ -94,6 +94,10 @@ void IRObstInit() {
 // gesture sensor functions
 void gestureInit() {
   paj7620Init();
+}
+
+void gestureRead() {
+  
 }
 
 // gyroscope functions
