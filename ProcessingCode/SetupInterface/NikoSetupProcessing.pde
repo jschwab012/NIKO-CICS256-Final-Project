@@ -10,7 +10,7 @@ Serial port;
 
 // GUI variables (in ArrayLists to allow for easy adding of new textboxes/buttons)
 int windowWidth = 500;
-int windowHeight = 400;
+int windowHeight = 475;
 float marginStart = windowWidth / 20;
 
 // setup elements
@@ -49,7 +49,9 @@ void draw() {
   // init text
   textFont(f);
   fill(255);
-  text("COM Port", marginStart, 35);
+  text("Make Sure to connect to NIKO", marginStart, 30);
+  text("in your device's bluetooth settings!", marginStart, 55);
+  text("COM Port", marginStart, 95);
   
   // draw setup textboxes
   comTextbox.DRAW();
@@ -61,8 +63,8 @@ void draw() {
     // draw text headers
     textFont(f);
     fill(255);
-    text("SSID", marginStart, 185);
-    text("Password", marginStart, 285);
+    text("SSID", marginStart, 245);
+    text("Password", marginStart, 345);
     
     // draw textboxes
     ssidTextbox.DRAW();
@@ -75,13 +77,13 @@ void draw() {
 
 void initLayout() {
   // init textbox objects
-  comTextbox = new TEXTBOX(marginStart, 50, 250, 35);
-  ssidTextbox = new TEXTBOX(marginStart, 200, 250, 35);
-  pwTextbox = new TEXTBOX(marginStart, 300, 250, 35);
+  comTextbox = new TEXTBOX(marginStart, 110, 250, 35);
+  ssidTextbox = new TEXTBOX(marginStart, 260, 250, 35);
+  pwTextbox = new TEXTBOX(marginStart, 360, 250, 35);
   
   // init button objects
-  comButton = new Button(marginStart, 100, 200, 35, "Input COM Port");
-  wifiButton = new Button(marginStart, 350, 300, 35, "Connect NIKO to WiFi");
+  comButton = new Button(marginStart, 160, 200, 35, "Input COM Port");
+  wifiButton = new Button(marginStart, 410, 300, 35, "Connect NIKO to WiFi");
   
   // init strings
   comPort = comTextbox.Text;

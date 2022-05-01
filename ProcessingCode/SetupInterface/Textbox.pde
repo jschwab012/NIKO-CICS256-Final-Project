@@ -64,13 +64,14 @@ public class TEXTBOX {
          } else if (KEYCODE == (int)ENTER) {
             return true;
          } else {
-            // CHECK IF THE KEY IS A LETTER OR A NUMBER
+            // CHECK IF THE KEY IS A LETTER, NUMBER, OR VALID SPECIAL CHARACTER
             boolean isKeyCapitalLetter = (KEY >= 'A' && KEY <= 'Z');
             boolean isKeySmallLetter = (KEY >= 'a' && KEY <= 'z');
             boolean isKeyNumber = (KEY >= '0' && KEY <= '9');
             boolean isKeyValidSpecialChar = (KEY >= '!' && KEY <= '/' ||
                                           KEY >= ':' && KEY <= '?' ||
-                                          KEY >= '{' && KEY <= '~');
+                                          KEY >= '{' && KEY <= '~' ||
+                                          KEY == '_');
       
             if (isKeyCapitalLetter || isKeySmallLetter || isKeyNumber || isKeyValidSpecialChar) {
                addText(KEY);
