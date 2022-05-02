@@ -1,4 +1,5 @@
 #include "I2C_Devices.h"
+#include "Servos.h"
 
 // globals initialization
 const int LCD_ADDR = 0x3F;
@@ -90,8 +91,16 @@ void edgeSensorInit() {
 }
 
 // IR obst functions
+void IRAM_ATTR objectDetected() {
+  moveState = backward;
+}
+void IRAM_ATTR objectUndetected() {
+  moveState = idle;
+}
 void IRObstInit() {
   pinMode(IR_PIN, INPUT);
+  attachInterrupt(IR_PIN, objectDetected, FALLING);
+  attachInterrupt(IR_PIN, objectUndetected, RISING);
 }
 
 // gesture sensor functions
@@ -107,4 +116,27 @@ uint8_t gestureRead() {
 void gyroInit() {
   GYRO.begin();
 }
-// probably need more gyro reading functions for the various metrics
+
+// initialize I2C devices
+void I2CInit() {
+  LCDInit();
+  Serial.println("LCD initialized");
+  LCDPrint("Pairing... Go to", "Processing!");
+  
+  eyesInit();
+  Serial.println("Left eye initialized");
+  Serial.println("Right eye initialized");
+  
+  edgeSensorInit();
+  Serial.println("Edge (light) sensor initialized");
+  
+  IRObstInit();
+  Serial.println("Infrared Obstacle Avoidance (front) sensor initialized");
+  
+  gestureInit();
+  Serial.println("Gesture sensor initialized");
+  
+  gyroInit();
+  Serial.println("Gyroscope initialized");
+  Serial.println("");
+}

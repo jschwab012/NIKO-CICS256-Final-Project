@@ -20,68 +20,65 @@ void callback(esp_spp_cb_event_t event, esp_spp_cb_param_t *param) {
     bluetoothConnected = true;
   }
   if (event == ESP_SPP_DATA_IND_EVT) {
-    LCDPrint("Reading WiFi", "Information...");
     char readChar = SerialBT.read();
-    if (readChar == '?') { // read ssid (assumes SSID is received before password)
+    if (readChar == '?') {
+      // read ssid (assumes SSID is received before password)
+      LCDPrint("Reading WiFi", "Information...");
       readChar = SerialBT.read(); // skip '?'
       while (readChar != '@') {
-//        Serial.println("reading ssid...");
         ssid += readChar;
         readChar = SerialBT.read();
       }
-    }
-    
-    if (readChar == '@') { // read pass
-      readChar = SerialBT.read(); // skip '@'
-      while (SerialBT.available()) {
-//        Serial.println("reading pass..");
-        pass += readChar;
-        readChar = SerialBT.read();
+      if (readChar == '@') { // read pass
+        readChar = SerialBT.read(); // skip '@'
+        while (SerialBT.available()) {
+          //        Serial.println("reading pass..");
+          pass += readChar;
+          readChar = SerialBT.read();
+        }
+        pass += readChar; // add last char that was read
       }
-      pass += readChar; // add last char that was read
+      wifiInfoReceived = !ssid.equals("") && !pass.equals("");
+      if (wifiInfoReceived) {
+        Serial.println("WiFi Info received:");
+        Serial.println("ssid: " + ssid);
+        Serial.println("pass: " + pass);
+        Serial.println("");
+      } else {
+        Serial.println("WiFi info not received:");
+        Serial.println("current ssid string: " + ssid);
+        Serial.println("current pass string: " + pass);
+      }
+      wifiInit();
     }
-    wifiInfoReceived = !ssid.equals("") && !pass.equals("");
-    if (wifiInfoReceived) {
-      Serial.println("WiFi Info received:");
-      Serial.println("ssid: " + ssid);
-      Serial.println("pass: " + pass);
-      Serial.println("");
-    } else {
-      Serial.println("WiFi info not received:");
-      Serial.println("current ssid string: " + ssid);
-      Serial.println("current pass string: " + pass);
+    if (readChar == '$') {
+      // receive audio input from Processing
     }
-
-    wifiInit();
   }
-//  if (event == ESP_SPP_INIT_EVT) {
-//    Serial.println("Init event detected");
-//  }
-//  if (event == 0 || event == 1 || event == 8 || event == 26 || 
-//      event == 27 || event == 28 || event == 29 || event == 30 ||
-//      event == 31 || event == 33 || event == 34 || event == 35) {
-//        Serial.println(event);
-//   }
+  //  if (event == ESP_SPP_INIT_EVT) {
+  //    Serial.println("Init event detected");
+  //  }
+  //  if (event == 0 || event == 1 || event == 8 || event == 26 ||
+  //      event == 27 || event == 28 || event == 29 || event == 30 ||
+  //      event == 31 || event == 33 || event == 34 || event == 35) {
+  //        Serial.println(event);
+  //   }
 }
 
 void bluetoothInit() {
   SerialBT.register_callback(callback);
   if (!SerialBT.begin("NIKO")) {
     Serial.println("Error in starting Bluetooth");
-// exit(1);
+    // exit(1);
   } else {
     Serial.println("Bluetooth started");
-    while(!bluetoothConnected) {
+    while (!bluetoothConnected) {
       Serial.println("Waiting for bluetooth connection...");
       delay(1000);
     }
-//  TODO: implement better connection check
+    //  TODO: implement better connection check
   }
 }
-
-//void bluetoothReadWifiInfo() {
-//  
-//}
 
 void wifiInit() {
   char ssidArr[ssid.length() + 1];
@@ -92,13 +89,14 @@ void wifiInit() {
   WiFi.disconnect(); // clear existing connections
   WiFi.begin(ssidArr, passArr);
   Serial.println("ssidArr and passArr:");
-//  for (int i = 0; i < ssid.length(); i++) {
-//    Serial.print(ssidArr[i]);
-//  }
-//  Serial.println("");
-//  for (int i = 0; i < pass.length(); i++) {
-//    Serial.print(passArr[i]);
-//  }
+  // for debugging:
+  //  for (int i = 0; i < ssid.length(); i++) {
+  //    Serial.print(ssidArr[i]);
+  //  }
+  //  Serial.println("");
+  //  for (int i = 0; i < pass.length(); i++) {
+  //    Serial.print(passArr[i]);
+  //  }
   int attempts = 0; // make sure wifi connection loop times out
   LCDPrint("Attempting WiFi", "connection...");
   while (WiFi.status() != WL_CONNECTED && attempts < 20) {

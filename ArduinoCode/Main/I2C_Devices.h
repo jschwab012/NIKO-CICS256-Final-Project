@@ -45,10 +45,13 @@ void displayEyeMessage(const char* message, Adafruit_SSD1306* eye);
 // edge sensor
 void edgeSensorInit();
 // infrared obstacle avoidance
+void IRAM_ATTR objectDetected();
 void IRObstInit();
 // gesture
 void gestureInit();
 // gyro
 void gyroInit();
+// general init
+void I2CInit();
 
 #endif
