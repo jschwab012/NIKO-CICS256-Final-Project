@@ -15,12 +15,14 @@
 #include <Adafruit_MPU6050.h>
 #include <Adafruit_Sensor.h> // dependency for gyro
 
-// constants
+// globals
 extern const int LCD_ADDR; // 0x3F
-extern const int OLED_ADDR; // 0x3C
+extern const int OLED_ADDR_L; // 0x3C
+extern const int OLED_ADDR_R; // 0x3D
 extern const int LIGHT_SENSOR_ADDR; // 0x29
-extern const int IR_PIN; // 33 (for now)
+extern const int IR_PIN; // 26
 extern const int GESTURE_ADDR; // 0x43
+extern uint8_t gestureData; // 0
 //extern const int GYRO_ADDR; // 0x68
 
 // objects
@@ -37,9 +39,9 @@ void LCDPrint(const char* message1, const char* message2);
 // eyes (OLED)
 void eyesInit();
 void wakeUp();
-void winkEye(const char eye);
+void winkEye(Adafruit_SSD1306* eye);
 void blinkEyes();
-void displayEyeMessage(const char* message, const char eye);
+void displayEyeMessage(const char* message, Adafruit_SSD1306* eye);
 // edge sensor
 void edgeSensorInit();
 // infrared obstacle avoidance

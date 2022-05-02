@@ -51,6 +51,8 @@ void callback(esp_spp_cb_event_t event, esp_spp_cb_param_t *param) {
       Serial.println("current ssid string: " + ssid);
       Serial.println("current pass string: " + pass);
     }
+
+    wifiInit();
   }
 //  if (event == ESP_SPP_INIT_EVT) {
 //    Serial.println("Init event detected");
@@ -77,9 +79,9 @@ void bluetoothInit() {
   }
 }
 
-void bluetoothReadWifiInfo() {
-  
-}
+//void bluetoothReadWifiInfo() {
+//  
+//}
 
 void wifiInit() {
   char ssidArr[ssid.length() + 1];
@@ -87,6 +89,7 @@ void wifiInit() {
   ssid.toCharArray(ssidArr, ssid.length() + 1);
   pass.toCharArray(passArr, pass.length() + 1);
   WiFi.mode(WIFI_STA);
+  WiFi.disconnect(); // clear existing connections
   WiFi.begin(ssidArr, passArr);
   Serial.println("ssidArr and passArr:");
 //  for (int i = 0; i < ssid.length(); i++) {
@@ -97,11 +100,12 @@ void wifiInit() {
 //    Serial.print(passArr[i]);
 //  }
   int attempts = 0; // make sure wifi connection loop times out
+  LCDPrint("Attempting WiFi", "connection...");
   while (WiFi.status() != WL_CONNECTED && attempts < 20) {
     Serial.println("Waiting for WiFi connection...");
-    delay(500);
+    delay(1000);
     attempts++;
   }
-  if (WiFi.status() != WL_CONNECTED) wifiConnected = true;
+  if (WiFi.status() == WL_CONNECTED) wifiConnected = true;
   else LCDPrint("WiFi timed out", ":(");
 }

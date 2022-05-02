@@ -49,7 +49,7 @@ void draw() {
   // init text
   textFont(f);
   fill(255);
-  text("Make Sure to connect to NIKO", marginStart, 30);
+  text("Make Sure to pair NIKO", marginStart, 30);
   text("in your device's bluetooth settings!", marginStart, 55);
   text("COM Port", marginStart, 95);
   
@@ -120,7 +120,11 @@ void mousePressed() {
        password = pwTextbox.Text;
        //port.write(65);
        //port.write("test string");
-       port.write("?" + ssidTextbox.Text + "@" + pwTextbox.Text);
+       try {
+          port.write("?" + ssidTextbox.Text + "@" + pwTextbox.Text);
+       } catch (NullPointerException e) {
+          println(e.getMessage()); 
+       }
     }
   }
   println("COM Port: " + comPort + "\nSSID: " + SSID + "\nPassword: " + password + '\n');

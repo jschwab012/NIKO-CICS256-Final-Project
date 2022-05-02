@@ -1,3 +1,9 @@
+ /* This example shows how to use continuous mode to take
+range measurements with the VL53L0X. It is based on
+vl53l0x_ContinuousRanging_Example.c from the VL53L0X API.
+
+The range readings are in units of mm. */
+
 #include <Wire.h>
 #include <VL53L0X.h>
 
@@ -24,8 +30,10 @@ void setup()
 
 void loop()
 {
-  Serial.print(sensor.readRangeContinuousMillimeters());
+  int startTime = millis();
+  sensor.readRangeContinuousMillimeters();
+  Serial.print("time to scan: "); Serial.println(millis() - startTime);
   if (sensor.timeoutOccurred()) { Serial.print(" TIMEOUT"); }
 
-  Serial.println();
+//  Serial.println();
 }

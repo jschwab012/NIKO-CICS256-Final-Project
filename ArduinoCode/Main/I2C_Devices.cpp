@@ -4,9 +4,10 @@
 const int LCD_ADDR = 0x3F;
 const int OLED_ADDR = 0x3C;
 const int LIGHT_SENSOR_ADDR = 0x29;
-const int IR_PIN = 29;
+const int IR_PIN = 26;
 const int GESTURE_ADDR = 0x43;
 const int GYRO_ADDR = 0x68;
+uint8_t gestureData = 0;
 
 // device object initialization
 LiquidCrystal_I2C LCD(LCD_ADDR, 16, 2);
@@ -15,7 +16,7 @@ Adafruit_SSD1306 EYE_R(128, 64); // right eye (NIKO's right)
 VL53L0X EDGE_SENSOR; // analog light distance sensor
 Adafruit_MPU6050 GYRO; // gyro (auto detects address I think?)
 
-// Big LCD Screen functions
+// Big LCD functions
 // init LCD
 void LCDInit() {
   // initialize LCD
@@ -31,15 +32,10 @@ void LCDPrint(const char* message1, const char* message2) {
   LCD.setCursor(0, 0);
   // print message
   LCD.print(message1);
-//  delay(1000);
-  // clears the display to print new message
-//  LCD.clear();
   
   // set cursor to first column, second row
   LCD.setCursor(0,1);
   LCD.print(message2);
-//  delay(1000);
-//  LCD.clear(); 
 }
 
 // eye functions (some of these are kinda funky cause most of the time, each eye will do the same thing, but we want the option
@@ -47,13 +43,15 @@ void LCDPrint(const char* message1, const char* message2) {
 // inits both eyes and draws first eye frame
 void eyesInit() { 
   // init EYE_L
-  EYE_L.begin(SSD1306_SWITCHCAPVCC, 0x3C); // init
+  EYE_L.begin(SSD1306_SWITCHCAPVCC, OLED_ADDR); // init
   EYE_L.clearDisplay();         // clear software buffer
   EYE_L.setTextColor(WHITE);    // set text color
+  EYE_L.display();
   // init EYE_R
-  EYE_R.begin(SSD1306_SWITCHCAPVCC, 0x3C); // init
+  EYE_R.begin(SSD1306_SWITCHCAPVCC, OLED_ADDR); // init
   EYE_R.clearDisplay();         // clear software buffer
   EYE_R.setTextColor(WHITE);    // set text color
+  EYE_R.display();
   // TODO: draw eyes?
 }
 
@@ -65,7 +63,7 @@ void wakeUp() {
 }
 
 // winks eye based on eye char passed in (default 'r' for right)
-void winkEye(const char eye) {
+void winkEye(Adafruit_SSD1306* eye) {
   
 }
 
@@ -75,14 +73,19 @@ void blinkEyes() {
 }
 
 // displays a message at (0,0) on one or both eye(s)
-void displayEyeMessage(const char* message, const char eye) {
-  
+void displayEyeMessage(const char* message, Adafruit_SSD1306* eye) {
+  eye->clearDisplay();
+  eye->setCursor(0, 0);
+  eye->setTextSize(2);
+  eye->print(message);
+  eye->display();
 }
 
 // light (edge) distance sensor functions
 // init EDGE_SENSOR (still unsure of why the constructor never needs to be called ¯\_(ツ)_/¯)
 void edgeSensorInit() {
-  EDGE_SENSOR.setTimeout(500); // could also check for !EDGE_SENSOR here to see if initialization worked
+  EDGE_SENSOR.init();
+  EDGE_SENSOR.setTimeout(500);
   EDGE_SENSOR.startContinuous();
 }
 
@@ -96,8 +99,8 @@ void gestureInit() {
   paj7620Init();
 }
 
-void gestureRead() {
-  
+uint8_t gestureRead() {
+  return paj7620ReadReg(GESTURE_ADDR, 1, &gestureData);
 }
 
 // gyroscope functions
