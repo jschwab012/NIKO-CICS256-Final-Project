@@ -30,6 +30,9 @@ String comPort;
 String SSID;
 String password;
 
+boolean audioRecInit = false;
+//Audio Recognition
+AudioRecognition audioRec;
 void settings() {
   size(windowWidth, windowHeight); 
 }
@@ -41,6 +44,9 @@ void setup() {
  
  // init custom GUI elements
  initLayout();
+ 
+ //Init voice recognition
+ thread("initAudioRec");
 }
 
 void draw() {  
@@ -73,6 +79,10 @@ void draw() {
     // draw buttons 
     wifiButton.display();
   }
+  if(audioRecInit){
+    println(audioRec.recieveRec());
+  }
+  
 }
 
 void initLayout() {
@@ -136,4 +146,11 @@ void keyPressed() {
    ssidTextbox.KEYPRESSED(key, keyCode);
    pwTextbox.KEYPRESSED(key, keyCode); 
   }
+}
+
+void initAudioRec(){
+  audioRec = new AudioRecognition();
+  audioRec.configVoiceRec();
+  audioRec.startRec(true);
+  audioRecInit = true;
 }
