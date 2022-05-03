@@ -29,17 +29,18 @@ public class AudioRecognition{
   }
   
   //call in draw()
-  String recieveRec(){
-    result = recognizer.getResult();
-    if(result != null){
-      print("Hypothesis: ");
-      println(result.getHypothesis());
-      
-      //Remove if statement to allow for infinite recognition
-      if(result.getHypothesis().equals("exit")){
-        stopRec();
+  String recieveRec(boolean canRecieve){
+    if(canRecieve){
+      result = recognizer.getResult();
+      if(result != null){
+        print("Hypothesis: ");
+        println(result.getHypothesis());
       }
+      return result.getHypothesis();
     }
-    return result.getHypothesis();
+    else{
+      return null;
+    }
+    
   }
 }

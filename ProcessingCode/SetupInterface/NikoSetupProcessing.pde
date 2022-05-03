@@ -31,6 +31,7 @@ String SSID;
 String password;
 
 int isAudioRecRunning = 0; //0 off, 1 loading, 2 recording
+boolean isAudioRecListening = false;
 //Audio Recognition
 AudioRecognition audioRec;
 void settings() {
@@ -83,7 +84,11 @@ void draw() {
   recordingLight();
   //send recognized audio here
   if(isAudioRecRunning == 2){
-    println(audioRec.recieveRec());
+    String result = audioRec.recieveRec(isAudioRecListening);
+    println(result);
+    if(result.equals("exit")){
+        exitAudioRec();
+      }
   }
   
 }
@@ -154,12 +159,18 @@ void keyPressed() {
 //Recording stuff
 void initAudioRec(){
   isAudioRecRunning = 1;
+  isAudioRecListening = true;
   audioRec = new AudioRecognition();
   audioRec.configVoiceRec();
   audioRec.startRec(true);
   isAudioRecRunning = 2;
 }
 
+void exitAudioRec(){
+  isAudioRecRunning = 0;
+  isAudioRecListening = false;
+  audioRec.stopRec();
+}
 void recordingLight(){
   if(isAudioRecRunning == 1){
     fill(255, 255, 0);
