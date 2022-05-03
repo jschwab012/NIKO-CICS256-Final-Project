@@ -30,8 +30,11 @@ String comPort;
 String SSID;
 String password;
 
+//AudioRec stuff
 int isAudioRecRunning = 0; //0 off, 1 loading, 2 recording
 boolean isAudioRecListening = false;
+
+Button recordingButton;
 //Audio Recognition
 AudioRecognition audioRec;
 void settings() {
@@ -84,6 +87,7 @@ void draw() {
   recordingLight();
   //send recognized audio here
   if(isAudioRecRunning == 2){
+    recordingButton.display();
     String result = audioRec.recieveRec(isAudioRecListening);
     println(result);
     if(result.equals("exit")){
@@ -102,7 +106,7 @@ void initLayout() {
   // init button objects
   comButton = new Button(marginStart, 160, 200, 35, "Input COM Port");
   wifiButton = new Button(marginStart, 410, 300, 35, "Connect NIKO to WiFi");
-  
+  recordingButton = new Button(windowWidth - 250, windowHeight - 45, 200, 35, "Stop Recording");
   // init strings
   comPort = comTextbox.Text;
   SSID = ssidTextbox.Text;
