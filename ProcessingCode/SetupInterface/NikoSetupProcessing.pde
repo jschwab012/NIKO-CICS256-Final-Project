@@ -123,6 +123,7 @@ void mousePressed() {
           //println("opening bluetooth serial port");
           try {
             port = new Serial(this, comPort, 115200);
+            port.write(';');
           } catch (RuntimeException e) {
             // TIP: If you get a "Port not found" error, turn your pc bluetooth off then on again
              println(e.getMessage());

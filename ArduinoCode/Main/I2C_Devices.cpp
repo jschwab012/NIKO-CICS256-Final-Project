@@ -67,7 +67,7 @@ void eyesInit() {
 void wakeUp() {
   EYES.clearDisplay();
   EYES.fillRect(16, 8, 96, 48, WHITE);
-  EYES.fillCircle(72, 32, 12, BLACK);
+  EYES.fillCircle(90, 32, 12, BLACK);
   EYES.display();
 }
 
@@ -127,6 +127,7 @@ void IRObstInit() {
 
 void handleIRDetection(){
   int IRVal = digitalRead(IR_PIN);
+  Serial.print("IR: "); Serial.println(IRVal);
   if(IRVal == LOW){ //FALLING
     overrideState(backward);
   }
@@ -158,6 +159,7 @@ void handleGestures(){
 //  Serial.print("gesture error: ");
 //  Serial.println(gestureRead());
   gestureRead();
+//  Serial.print("Gesture: "); Serial.println(gestureData);
   switch(gestureData){
     case GES_FORWARD_FLAG:{ //Towards the sensor
       changeState(backward, 5000);

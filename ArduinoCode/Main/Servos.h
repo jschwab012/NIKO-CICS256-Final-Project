@@ -2,6 +2,7 @@
 #define SERVOS_H
 
 // libraries
+#include <Arduino.h>
 #include <ESP32Servo.h>
 
 // globals
@@ -9,10 +10,6 @@ typedef enum {idle=0, forward, backward, turnRight, turnLeft} Movement;
 extern volatile Movement moveState;
 extern const int moveDegree;
 extern const int servoPins[4];
-extern const int servo0Pin;
-extern const int servo1Pin;
-extern const int servo2Pin;
-extern const int servo3Pin;
 extern int leftL;
 extern int leftF;
 extern int rightL;
