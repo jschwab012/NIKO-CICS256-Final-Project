@@ -1,16 +1,21 @@
 #include "Servos.h"
 
 // globals initialization
-Movement moveState = idle;
+volatile Movement moveState = idle;
 const int moveDegree = 45;
+const int servoPins[4] = {23, 18, 15, 2};
 int leftL = 90;
 int leftF = 90;
 int rightL = 90-moveDegree;
 int rightF = 90-moveDegree;
 int leftV = 1;
 int rightV = 1;
-int delayTime = 5;
+int delayTime = 1;
 int currTime = millis(); // set to 0?
+boolean stateChanged = false;
+int delayState = 0;
+int idleTimer = 0;
+boolean idleTimerFlag = false;
 
 // objects
 Servo servos[4];
@@ -19,35 +24,66 @@ Servo servos[4];
 void servosInit() {
   // TODO: make these pin nums global variables
   // attach servos
-  servos[0].attach(23); 
-  servos[1].attach(18);
-  servos[2].attach(15);
-  servos[3].attach(2);
+  servos[0].attach(servoPins[0]); 
+  servos[1].attach(servoPins[1]);
+  servos[2].attach(servoPins[2]);
+  servos[3].attach(servoPins[3]);
+}
+
+boolean changeState(Movement newState, int t){
+  if(!stateChanged && moveState != newState){
+    moveState = newState;
+    handleStateDelay(2000);
+    idleTimer = millis() + t;
+    idleTimerFlag = true;
+    return true;
+  }
+  return false;
+}
+
+void overrideState(Movement newState){
+  moveState = newState;
+  handleStateDelay(2000);
+}
+
+void handleStateDelay(int t){
+    stateChanged = true;
+    delayState = millis() + t;
 }
 
 void handleMovement() { // might just move into the loop function
+  boolean verboseServos = false;
   int moveDegree = 45;
   int idleDegree = 90;
 //  int angles = {{90, 90, 90, 90}, 
 //                {90+moveDegree, 90-moveDegree, 90+moveDegree, 90-moveDegree}};
+  if(stateChanged && millis() > delayState){
+    stateChanged = false;
+  }
+  if(idleTimerFlag && millis() > idleTimer){
+    moveState = idle;
+    idleTimerFlag = false;
+  }
   if(millis() > currTime){
     switch(moveState){
       case idle:{
-        Serial.print(signbit(90 - leftL) ? 1 : -1);
-        Serial.print(" ");
-        Serial.println(signbit(90 - leftF) ? 1 : -1);
-        
-        Serial.print(signbit(90 - rightL) ? 1 : -1);
-        Serial.print(" ");
-        Serial.println(signbit(90 - rightF) ? 1 : -1);
-        
-        Serial.print(leftL);
-        Serial.print(" ");
-        Serial.println(leftF);
-        Serial.print(rightL);
-        Serial.print(" ");
-        Serial.println(rightF);
-        Serial.println("----");
+        if (verboseServos) {
+          Serial.print(signbit(90 - leftL) ? 1 : -1);
+          Serial.print(" ");
+          Serial.println(signbit(90 - leftF) ? 1 : -1);
+          
+          Serial.print(signbit(90 - rightL) ? 1 : -1);
+          Serial.print(" ");
+          Serial.println(signbit(90 - rightF) ? 1 : -1);
+          
+          Serial.print(leftL);
+          Serial.print(" ");
+          Serial.println(leftF);
+          Serial.print(rightL);
+          Serial.print(" ");
+          Serial.println(rightF);
+          Serial.println("----");
+        }
         if(leftL != 90) {
           leftL += signbit(90 - leftL) ? -1 : 1;
           servos[0].write(leftL);
@@ -64,8 +100,10 @@ void handleMovement() { // might just move into the loop function
           rightF += signbit(90 - rightF) ? -1 : 1;
           servos[3].write(rightF);
         }
-        
-        Serial.println("====================================");
+
+        if (verboseServos) {
+          Serial.println("====================================");
+        }
         break;
       }
       case forward:{
@@ -98,16 +136,18 @@ void handleMovement() { // might just move into the loop function
         servos[1].write(rightL);
         servos[2].write(leftF);
         servos[3].write(rightF);
-        Serial.print(leftV);
-        Serial.print(" ");
-        Serial.println(rightV);
-        Serial.print(leftL);
-        Serial.print(" ");
-        Serial.println(leftF);
-        Serial.print(rightL);
-        Serial.print(" ");
-        Serial.println(rightF);
-        Serial.println("----");
+        if (verboseServos) {
+          Serial.print(leftV);
+          Serial.print(" ");
+          Serial.println(rightV);
+          Serial.print(leftL);
+          Serial.print(" ");
+          Serial.println(leftF);
+          Serial.print(rightL);
+          Serial.print(" ");
+          Serial.println(rightF);
+          Serial.println("----");
+        }
         break;
       }
       case backward:{
@@ -140,16 +180,18 @@ void handleMovement() { // might just move into the loop function
         servos[1].write(rightL);
         servos[2].write(leftF);
         servos[3].write(rightF);
-        Serial.print(leftV);
-        Serial.print(" ");
-        Serial.println(rightV);
-        Serial.print(leftL);
-        Serial.print(" ");
-        Serial.println(leftF);
-        Serial.print(rightL);
-        Serial.print(" ");
-        Serial.println(rightF);
-        Serial.println("----");
+        if (verboseServos) {
+          Serial.print(leftV);
+          Serial.print(" ");
+          Serial.println(rightV);
+          Serial.print(leftL);
+          Serial.print(" ");
+          Serial.println(leftF);
+          Serial.print(rightL);
+          Serial.print(" ");
+          Serial.println(rightF);
+          Serial.println("----");
+        }
         break;
       }
       case turnRight:{
@@ -184,16 +226,18 @@ void handleMovement() { // might just move into the loop function
         servos[1].write(rightL);
         servos[2].write(leftF);
         servos[3].write(rightF);
-        Serial.print(leftV);
-        Serial.print(" ");
-        Serial.println(rightV);
-        Serial.print(leftL);
-        Serial.print(" ");
-        Serial.println(leftF);
-        Serial.print(rightL);
-        Serial.print(" ");
-        Serial.println(rightF);
-        Serial.println("----");
+        if (verboseServos) {
+          Serial.print(leftV);
+          Serial.print(" ");
+          Serial.println(rightV);
+          Serial.print(leftL);
+          Serial.print(" ");
+          Serial.println(leftF);
+          Serial.print(rightL);
+          Serial.print(" ");
+          Serial.println(rightF);
+          Serial.println("----");
+        }
         break;
       }
       case turnLeft:{
