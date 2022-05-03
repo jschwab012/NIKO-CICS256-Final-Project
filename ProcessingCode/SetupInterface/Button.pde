@@ -48,4 +48,8 @@ class Button{
     }
     return false;
   }
+  
+  void setLabel(String lbl){
+    label = lbl;
+  }
 }  //end Button class

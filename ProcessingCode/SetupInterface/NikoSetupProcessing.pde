@@ -50,7 +50,7 @@ void setup() {
  initLayout();
  
  //Init voice recognition
- thread("initAudioRec");
+ initAudioRec();
 }
 
 void draw() {  
@@ -84,16 +84,12 @@ void draw() {
     wifiButton.display();
   }
   
-  recordingLight();
-  //send recognized audio here
-  if(isAudioRecRunning == 2){
+  if(!comPort.equals("")){
     recordingButton.display();
-    String result = audioRec.recieveRec(isAudioRecListening);
-    println(result);
-    if(result.equals("exit")){
-        exitAudioRec();
-      }
+    recordingLight();
   }
+  //send recognized audio here
+  sendSerialSpeechMessage();
   
 }
 
@@ -106,7 +102,8 @@ void initLayout() {
   // init button objects
   comButton = new Button(marginStart, 160, 200, 35, "Input COM Port");
   wifiButton = new Button(marginStart, 410, 300, 35, "Connect NIKO to WiFi");
-  recordingButton = new Button(windowWidth - 250, windowHeight - 45, 200, 35, "Stop Recording");
+  recordingButton = new Button(windowWidth - 215, windowHeight - 115, 200, 35, "Start Recording");
+  
   // init strings
   comPort = comTextbox.Text;
   SSID = ssidTextbox.Text;
@@ -150,6 +147,17 @@ void mousePressed() {
     }
   }
   println("COM Port: " + comPort + "\nSSID: " + SSID + "\nPassword: " + password + '\n');
+  
+  //mouse clicks for Recording textboxes/button
+  if(recordingButton.clicked(mouseX, mouseY)){
+    if(isAudioRecRunning == 0){
+      recordingButton.setLabel("Stop Recording");
+      thread("startRecording");
+    } else if(isAudioRecRunning == 2){
+      recordingButton.setLabel("Start Recording");
+      exitAudioRec();
+    }
+  }
 }
 
 void keyPressed() {
@@ -162,10 +170,13 @@ void keyPressed() {
 
 //Recording stuff
 void initAudioRec(){
-  isAudioRecRunning = 1;
-  isAudioRecListening = true;
   audioRec = new AudioRecognition();
   audioRec.configVoiceRec();
+}
+
+void startRecording(){
+  isAudioRecRunning = 1;
+  isAudioRecListening = true;
   audioRec.startRec(true);
   isAudioRecRunning = 2;
 }
@@ -174,6 +185,7 @@ void exitAudioRec(){
   isAudioRecRunning = 0;
   isAudioRecListening = false;
   audioRec.stopRec();
+  
 }
 void recordingLight(){
   if(isAudioRecRunning == 1){
@@ -185,5 +197,21 @@ void recordingLight(){
   else{
     fill(255, 0, 0);
   }
-  circle(windowWidth - 25, windowHeight - 25, 25);
+  circle(windowWidth - 25, windowHeight - 55, 25);
+}
+
+void sendSerialSpeechMessage(){
+  if(isAudioRecRunning == 2){
+    String result = audioRec.recieveRec(isAudioRecListening);
+    if(result.contains("niko")){
+      if(result.contains("exit")){
+        exitAudioRec();
+      }
+      else{
+        String command = "$NIKO$ " + result;
+        println("Sending to NIKO: " + command);
+        port.write(command);
+      }
+    }
+  }
 }
