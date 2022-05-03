@@ -30,7 +30,7 @@ String comPort;
 String SSID;
 String password;
 
-boolean audioRecInit = false;
+int isAudioRecRunning = 0; //0 off, 1 loading, 2 recording
 //Audio Recognition
 AudioRecognition audioRec;
 void settings() {
@@ -79,7 +79,10 @@ void draw() {
     // draw buttons 
     wifiButton.display();
   }
-  if(audioRecInit){
+  
+  recordingLight();
+  //send recognized audio here
+  if(isAudioRecRunning == 2){
     println(audioRec.recieveRec());
   }
   
@@ -148,9 +151,24 @@ void keyPressed() {
   }
 }
 
+//Recording stuff
 void initAudioRec(){
+  isAudioRecRunning = 1;
   audioRec = new AudioRecognition();
   audioRec.configVoiceRec();
   audioRec.startRec(true);
-  audioRecInit = true;
+  isAudioRecRunning = 2;
+}
+
+void recordingLight(){
+  if(isAudioRecRunning == 1){
+    fill(255, 255, 0);
+  }
+  else if(isAudioRecRunning == 2){
+    fill(0, 255, 0);
+  }
+  else{
+    fill(255, 0, 0);
+  }
+  circle(windowWidth - 25, windowHeight - 25, 25);
 }
