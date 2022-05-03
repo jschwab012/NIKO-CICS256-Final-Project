@@ -21,8 +21,8 @@ public class AudioRecognition{
     }
   }
   
-  void startRec(boolean start){
-    recognizer.startRecognition(start);
+  void startRec(){
+    recognizer.startRecognition(true);
   }
   void stopRec(){
     recognizer.stopRecognition();

@@ -152,10 +152,8 @@ void mousePressed() {
   //mouse clicks for Recording textboxes/button
   if(recordingButton.clicked(mouseX, mouseY)){
     if(isAudioRecRunning == 0){
-      recordingButton.setLabel("Stop Recording");
       thread("startRecording");
     } else if(isAudioRecRunning == 2){
-      recordingButton.setLabel("Start Recording");
       exitAudioRec();
     }
   }
@@ -175,19 +173,25 @@ void initAudioRec(){
   audioRec.configVoiceRec();
 }
 
+//Start recording and change internal values
 void startRecording(){
-  isAudioRecRunning = 1;
+  isAudioRecRunning = 1;'
+  recordingButton.setLabel("Stop Recording");
   isAudioRecListening = true;
-  audioRec.startRec(true);
+  audioRec.startRec();
   isAudioRecRunning = 2;
 }
 
+//Stop recording and change internal values
 void exitAudioRec(){
+  recordingButton.setLabel("Start Recording");
   isAudioRecRunning = 0;
   isAudioRecListening = false;
   audioRec.stopRec();
   
 }
+
+//Set the color of the rec light
 void recordingLight(){
   if(isAudioRecRunning == 1){
     fill(255, 255, 0);
@@ -201,18 +205,24 @@ void recordingLight(){
   circle(windowWidth - 25, windowHeight - 55, 25);
 }
 
+//Send message to arduino if niko is said
+//stops recording if exit is sent
 void sendSerialSpeechMessage(){
-  if(isAudioRecRunning == 2){
-    String result = audioRec.recieveRec(isAudioRecListening);
-    if(result.contains("niko")){
-      if(result.contains("exit")){
-        exitAudioRec();
-      }
-      else{
-        String command = "$NIKO$ " + result;
-        println("Sending to NIKO: " + command);
-        port.write(command);
+  try{
+    if(isAudioRecRunning == 2){
+      String result = audioRec.recieveRec(isAudioRecListening);
+      if(result.contains("niko")){
+        if(result.contains("exit")){
+          exitAudioRec();
+        }
+        else{
+          String command = "$NIKO$ " + result;
+          println("Sending to NIKO: " + command);
+          port.write(command);
+        }
       }
     }
+  }catch(Exception e){
+    e.printStackTrace();
   }
 }
