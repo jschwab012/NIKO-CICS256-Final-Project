@@ -4,7 +4,7 @@
 
 /**
  * Interacting with each I2C device:
- * Each device's corresponding [devicename]Init() method should be called in setup()
+ * Each device's corresponding [devicename]Init() method shoulhd be called in setup()
  * 1. Print to center LCD: LCDPrint("message1", "message2") or LCDPrint("message1") or LCDPrint(NULL, "message2") (time to print 2 messages: ~40ms)
  * 2. Eye (OLED) functions: Call the corresponding method and if it takes in an eye param, call like so: displayEyeMessage(message, 'r') (time to print: 27ms)
  * 3. Edge Sensor: call EDGE_SENSOR.readRangeContinuousMillimeters() directly (time to read: 32ms)
@@ -12,9 +12,6 @@
  * 5. Gesture sensor (this one is weirder because of how the library works): call paj7620ReadReg(GESTURE_ADDR, 1, &gestureData) (time to read: ~0ms)
  * 6. Gyro: still figuring out best way to do reads
  */
-
-//enum State { IDLE };
-//State state = IDLE;
 
 void setup() {
   // put your setup code here, to run once:
@@ -27,6 +24,7 @@ void setup() {
   // setup connection
   bluetoothInit();
 
+  
   pinMode(0, INPUT);
   pinMode(34, INPUT);
   pinMode(35, INPUT);
@@ -41,7 +39,7 @@ void loop() {
 ////  EDGE_SENSOR.readRangeContinuousMillimeters();
 ////  digitalRead(IR_PIN);
 ////  paj7620ReadReg(GESTURE_ADDR, 1, &gestureData);
-//  Serial.print("Edge sensor reading: "); Serial.println(EDGE_SENSOR.readRangeContinuousMillimeters());
+//  Serial.print("Edge sensor reading: "); //Serial.println(EDGE_SENSOR.readRangeContinuousMillimeters());
 //  Serial.print("IR sensor reading: "); Serial.println(digitalRead(IR_PIN));
 //  Serial.print("Gesture sensor reading: "); Serial.print(paj7620ReadReg(GESTURE_ADDR, 1, &gestureData)); Serial.print(" "); Serial.println(gestureData);
 //  unsigned long endTime = millis();
@@ -51,13 +49,23 @@ void loop() {
 
   Serial.println(moveState);
  if(digitalRead(0) == LOW){
-    moveState = forward;
+    changeState(forward, 5000);
   }
   else if(digitalRead(34) == LOW){
-    moveState = backward;
+    changeState(backward, 5000);
   }
   else if(digitalRead(35) == LOW){
-    moveState = idle;
+    changeState(idle, 0);
   }
+  //Main sensors (IR, light)
+  handleIRDetection();
+  handleEdgeDetection();
+
+  //Secondary sensors
+  handleGestures();
+//  Serial.print("gesture: ");
+//  Serial.println(gestureData);
+
+  //Movement
   handleMovement();
 }

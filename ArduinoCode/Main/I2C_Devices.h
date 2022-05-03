@@ -23,7 +23,13 @@ extern const int LIGHT_SENSOR_ADDR; // 0x29
 extern const int IR_PIN; // 26
 extern const int GESTURE_ADDR; // 0x43
 extern uint8_t gestureData; // 0
-//extern const int GYRO_ADDR; // 0x68
+extern const int edgeFallingThreshold;
+extern const int edgeRisingThreshold;
+extern boolean edgeFallingFlag;
+extern int edgeSensorDelay;
+extern const int GYRO_ADDR; // 0x68
+
+extern int prevIRVal;
 
 // objects
 extern LiquidCrystal_I2C LCD; // center LCD
@@ -39,16 +45,18 @@ void LCDPrint(const char* message1, const char* message2);
 // eyes (OLED)
 void eyesInit();
 void wakeUp();
-void winkEye(Adafruit_SSD1306* eye);
 void blinkEyes();
-void displayEyeMessage(const char* message, Adafruit_SSD1306* eye);
+void displayEyeMessage(const char* message);
 // edge sensor
 void edgeSensorInit();
+void handleEdgeDetection();
 // infrared obstacle avoidance
-void IRAM_ATTR objectDetected();
 void IRObstInit();
+void handleIRDetection();
 // gesture
 void gestureInit();
+uint8_t gestureRead();
+void handleGestures();
 // gyro
 void gyroInit();
 // general init

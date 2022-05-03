@@ -9,11 +9,16 @@ const int IR_PIN = 26;
 const int GESTURE_ADDR = 0x43;
 const int GYRO_ADDR = 0x68;
 uint8_t gestureData = 0;
+int prevIRVal = HIGH;
+const int edgeFallingThreshold = 400;
+const int edgeRisingThreshold = 350;
+boolean edgeFallingFlag = false;
+int edgeSensorDelay = 0;
 
 // device object initialization
 LiquidCrystal_I2C LCD(LCD_ADDR, 16, 2);
-Adafruit_SSD1306 EYE_L(128, 64); // left eye (NIKO's left)
-Adafruit_SSD1306 EYE_R(128, 64); // right eye (NIKO's right)
+Adafruit_SSD1306 EYES(128, 64); // left eye (NIKO's left)
+//Adafruit_SSD1306 EYE_R(128, 64); // right eye (NIKO's right)
 VL53L0X EDGE_SENSOR; // analog light distance sensor
 Adafruit_MPU6050 GYRO; // gyro (auto detects address I think?)
 
@@ -44,28 +49,26 @@ void LCDPrint(const char* message1, const char* message2) {
 // inits both eyes and draws first eye frame
 void eyesInit() { 
   // init EYE_L
-  EYE_L.begin(SSD1306_SWITCHCAPVCC, OLED_ADDR); // init
-  EYE_L.clearDisplay();         // clear software buffer
-  EYE_L.setTextColor(WHITE);    // set text color
-  EYE_L.display();
+  EYES.begin(SSD1306_SWITCHCAPVCC, OLED_ADDR); // init
+  EYES.clearDisplay();         // clear software buffer
+  EYES.setTextColor(WHITE);    // set text color
+  EYES.display();
   // init EYE_R
-  EYE_R.begin(SSD1306_SWITCHCAPVCC, OLED_ADDR); // init
-  EYE_R.clearDisplay();         // clear software buffer
-  EYE_R.setTextColor(WHITE);    // set text color
-  EYE_R.display();
+//  EYE_R.begin(SSD1306_SWITCHCAPVCC, OLED_ADDR); // init
+//  EYE_R.clearDisplay();         // clear software buffer
+//  EYE_R.setTextColor(WHITE);    // set text color
+//  EYE_R.display();
   // TODO: draw eyes?
+  wakeUp();
 }
 
 // various drawing methods (these may need tweaking/repurposing because they might interrupt control flow of script too much?)
 // (i.e., the eye animation may look nothing like this functional approach by the end)
-// NIKO's eyes flicker and open
 void wakeUp() {
-  
-}
-
-// winks eye based on eye char passed in (default 'r' for right)
-void winkEye(Adafruit_SSD1306* eye) {
-  
+  EYES.clearDisplay();
+  EYES.fillRect(16, 8, 96, 48, WHITE);
+  EYES.fillCircle(72, 32, 12, BLACK);
+  EYES.display();
 }
 
 // blinks both eyes
@@ -74,12 +77,12 @@ void blinkEyes() {
 }
 
 // displays a message at (0,0) on one or both eye(s)
-void displayEyeMessage(const char* message, Adafruit_SSD1306* eye) {
-  eye->clearDisplay();
-  eye->setCursor(0, 0);
-  eye->setTextSize(2);
-  eye->print(message);
-  eye->display();
+void displayEyeMessage(const char* message) {
+  EYES.clearDisplay();
+  EYES.setCursor(0, 0);
+  EYES.setTextSize(2);
+  EYES.print(message);
+  EYES.display();
 }
 
 // light (edge) distance sensor functions
@@ -87,20 +90,50 @@ void displayEyeMessage(const char* message, Adafruit_SSD1306* eye) {
 void edgeSensorInit() {
   EDGE_SENSOR.init();
   EDGE_SENSOR.setTimeout(500);
-  EDGE_SENSOR.startContinuous();
+//  EDGE_SENSOR.startContinuous();
+}
+
+void handleEdgeDetection() {
+  if(millis() > edgeSensorDelay){
+    int edgeSensorVal = EDGE_SENSOR.readRangeSingleMillimeters();
+    Serial.print("edge: "); Serial.println(edgeSensorVal);
+    if(edgeSensorVal > edgeFallingThreshold){ //FALLING
+      overrideState(backward);
+      edgeFallingFlag = true;
+    }
+    else if(edgeFallingFlag && edgeSensorVal < edgeRisingThreshold){ //RISING
+      overrideState(idle);
+      edgeFallingFlag = false;
+    }
+    edgeSensorDelay = millis() + 100;
+  }
+  
 }
 
 // IR obst functions
-void IRAM_ATTR objectDetected() {
-  moveState = backward;
-}
-void IRAM_ATTR objectUndetected() {
-  moveState = idle;
-}
+//void IRAM_ATTR objectDetected() {
+//  moveState = backward;
+////  Serial.println("object detected");
+//}
+//void IRAM_ATTR objectUndetected() {
+//  moveState = idle;
+////  Serial.println("object undetected");
+//}
 void IRObstInit() {
   pinMode(IR_PIN, INPUT);
-  attachInterrupt(IR_PIN, objectDetected, FALLING);
-  attachInterrupt(IR_PIN, objectUndetected, RISING);
+//  attachInterrupt(IR_PIN, objectDetected, FALLING);
+//  attachInterrupt(IR_PIN, objectUndetected, RISING);
+}
+
+void handleIRDetection(){
+  int IRVal = digitalRead(IR_PIN);
+  if(IRVal == LOW){ //FALLING
+    overrideState(backward);
+  }
+  else if(prevIRVal == LOW && IRVal == HIGH){ //RISING
+    overrideState(idle);
+  }
+  prevIRVal = IRVal;
 }
 
 // gesture sensor functions
@@ -109,9 +142,39 @@ void gestureInit() {
 }
 
 uint8_t gestureRead() {
+  /*
+    #define PAJ7620_VAL(val, maskbit)   ( val << maskbit )
+    #define GES_RIGHT_FLAG       PAJ7620_VAL(1,0)
+    #define GES_LEFT_FLAG       PAJ7620_VAL(1,1)
+    #define GES_UP_FLAG         PAJ7620_VAL(1,2)
+    #define GES_DOWN_FLAG       PAJ7620_VAL(1,3)
+    #define GES_FORWARD_FLAG      PAJ7620_VAL(1,4)
+    #define GES_BACKWARD_FLAG     PAJ7620_VAL(1,5)
+   */
   return paj7620ReadReg(GESTURE_ADDR, 1, &gestureData);
 }
 
+void handleGestures(){
+//  Serial.print("gesture error: ");
+//  Serial.println(gestureRead());
+  gestureRead();
+  switch(gestureData){
+    case GES_FORWARD_FLAG:{ //Towards the sensor
+      changeState(backward, 5000);
+      break;
+    }
+    
+    case GES_BACKWARD_FLAG:{
+      changeState(forward, 5000); //Away from sensor
+      break;
+    }
+    
+    default:{
+      
+      break;
+    }
+  }
+}
 // gyroscope functions
 void gyroInit() {
   GYRO.begin();
