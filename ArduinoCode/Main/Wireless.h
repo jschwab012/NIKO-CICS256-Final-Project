@@ -20,7 +20,7 @@ extern boolean bluetoothConnected;
 extern boolean wifiInfoReceived;
 extern boolean wifiConnected;
 extern String weatherJSON;
-struct WeatherData { float temp; const char* description; };
+struct WeatherData { int temp; const char* description; };
 
 // objects
 extern BluetoothSerial SerialBT;

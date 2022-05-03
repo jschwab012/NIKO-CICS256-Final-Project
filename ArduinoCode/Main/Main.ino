@@ -23,7 +23,6 @@ void setup() {
 
   // setup connection
   bluetoothInit();
-
   
   pinMode(0, INPUT);
   pinMode(34, INPUT);
@@ -48,23 +47,23 @@ void loop() {
 //  delay(2000);
 
 //  Serial.println(moveState);
- if(digitalRead(0) == LOW){
-    changeState(forward, 5000);
-  }
-  else if(digitalRead(34) == LOW){
-    changeState(backward, 5000);
-  }
-  else if(digitalRead(35) == LOW){
-    changeState(idle, 0);
-  }
+// if(digitalRead(0) == LOW){
+//    changeState(forward, 5000);
+//  }
+//  else if(digitalRead(34) == LOW){
+//    changeState(backward, 5000);
+//  }
+//  else if(digitalRead(35) == LOW){
+//    changeState(idle, 0);
+//  }
   //Main sensors (IR, light)
   handleIRDetection();
   handleEdgeDetection();
 
   //Secondary sensors
   handleGestures();
-//  Serial.print("gesture: ");
-//  Serial.println(gestureData);
+  Serial.print("gesture: ");
+  Serial.println(gestureData);
 
   //Movement
   handleMovement();

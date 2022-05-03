@@ -127,6 +127,7 @@ void IRObstInit() {
 
 void handleIRDetection(){
   int IRVal = digitalRead(IR_PIN);
+  Serial.print("IR: "); Serial.println(IRVal);
   if(IRVal == LOW){ //FALLING
     overrideState(backward);
   }

@@ -59,7 +59,7 @@ void callback(esp_spp_cb_event_t event, esp_spp_cb_param_t *param) {
       // receive signal confirming bluetooth connection
       Serial.println("Bluetooth connection established");
       bluetoothConnected = true;
-      LCDPrint("_              _", " ______________ "); // smiley face :)
+      LCDPrint("               _", " _____________/ "); // smiley face :)
     }
   }
   //  if (event == ESP_SPP_INIT_EVT) {
@@ -79,10 +79,11 @@ void bluetoothInit() {
     // exit(1);
   } else {
     Serial.println("Bluetooth started");
-    while (!bluetoothConnected) {
-      Serial.println("Waiting for bluetooth connection...");
-      delay(1000);
-    }
+//    while (!bluetoothConnected) {
+//      Serial.println("Waiting for bluetooth connection...");
+//      Serial.println(bluetoothConnected);
+//      delay(2000);
+//    }
     //  TODO: implement better connection check
   }
 }
