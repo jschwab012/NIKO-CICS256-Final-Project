@@ -67,7 +67,7 @@ void eyesInit() {
 void wakeUp() {
   EYES.clearDisplay();
   EYES.fillRect(16, 8, 96, 48, WHITE);
-  EYES.fillCircle(72, 32, 12, BLACK);
+  EYES.fillCircle(90, 32, 12, BLACK);
   EYES.display();
 }
 
@@ -158,6 +158,7 @@ void handleGestures(){
 //  Serial.print("gesture error: ");
 //  Serial.println(gestureRead());
   gestureRead();
+//  Serial.print("Gesture: "); Serial.println(gestureData);
   switch(gestureData){
     case GES_FORWARD_FLAG:{ //Towards the sensor
       changeState(backward, 5000);

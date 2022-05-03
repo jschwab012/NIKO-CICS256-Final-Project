@@ -47,7 +47,7 @@ void loop() {
 //  Serial.print("Executing all scan operations took: "); Serial.println(endTime - startTime);
 //  delay(2000);
 
-  Serial.println(moveState);
+//  Serial.println(moveState);
  if(digitalRead(0) == LOW){
     changeState(forward, 5000);
   }
