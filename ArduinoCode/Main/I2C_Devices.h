@@ -42,6 +42,7 @@ extern Adafruit_MPU6050 GYRO;
 // LCD
 void LCDInit();
 void LCDPrint(const char* message1, const char* message2);
+void LCDPrintSmile();
 // eyes (OLED)
 void eyesInit();
 void wakeUp();

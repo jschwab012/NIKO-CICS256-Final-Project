@@ -16,6 +16,7 @@
 // globals
 extern String ssid;
 extern String pass;
+extern String command;
 extern boolean bluetoothConnected;
 extern boolean wifiInfoReceived;
 extern boolean wifiConnected;
@@ -33,5 +34,5 @@ void bluetoothInit(); // begin SerialBT
 void wifiInit(); // start WiFi in station mode and connect using ssid + pass initialized in bluetoothReadWifiInfo()
 void callWeatherAPI(String* payload);
 struct WeatherData deserializeWeatherJSON(String* weatherJSON);
-
+void displayWeather();
 #endif
