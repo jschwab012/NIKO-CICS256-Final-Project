@@ -62,7 +62,9 @@ void callback(esp_spp_cb_event_t event, esp_spp_cb_param_t *param) {
         readChar = SerialBT.read();
       }
       command += readChar; // add last char that was read
+      Serial.print("Command received: "); Serial.println(command);
       handleCommand(command);
+      command = "";
     }
     if (readChar == ';') {
       // receive signal confirming bluetooth connection
@@ -79,6 +81,12 @@ void callback(esp_spp_cb_event_t event, esp_spp_cb_param_t *param) {
   //      event == 31 || event == 33 || event == 34 || event == 35) {
   //        Serial.println(event);
   //   }
+}
+
+void handleCommand(String command) {
+  switch (command) {
+    
+  }
 }
 
 void bluetoothInit() {
