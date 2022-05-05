@@ -13,5 +13,6 @@ void initMP3(){
 }
 
 void playMP3(uint8_t trackNum){
+  Serial.print("Playing track num "); Serial.println(trackNum);
   mp3.playTrack(trackNum);
 }

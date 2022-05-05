@@ -13,7 +13,7 @@ extern SoftwareSerial  MP3Stream;
 extern MD_YX5300 mp3;
 
 //Functions
-void initMp3();
+void initMP3();
 void playMP3(uint8_t trackNum);
 
 #endif
