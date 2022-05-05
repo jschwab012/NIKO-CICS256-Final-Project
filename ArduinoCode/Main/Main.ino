@@ -1,6 +1,7 @@
 #include "I2C_Devices.h"
 #include "Wireless.h"
 #include "Servos.h"
+#include "MP3.h"
 
 /**
  * Interacting with each I2C device:
@@ -20,6 +21,7 @@ void setup() {
 
   // initialize I2C devices
   I2CInit();
+  initMP3();
 
   // setup connection
   bluetoothInit();

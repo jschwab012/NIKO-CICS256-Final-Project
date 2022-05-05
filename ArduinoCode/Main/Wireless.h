@@ -30,6 +30,7 @@ extern HTTPClient http;
 // functions
 void callback(esp_spp_cb_event_t event, esp_spp_cb_param_t *param);
 void handleCommand(String command);
+void playRandom(long min, long max);
 void bluetoothInit(); // begin SerialBT 
 //void bluetoothReadWifiInfo(); // wait for WiFi info from the Processing interface
 void wifiInit(); // start WiFi in station mode and connect using ssid + pass initialized in bluetoothReadWifiInfo()

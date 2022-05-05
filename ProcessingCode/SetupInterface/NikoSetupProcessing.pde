@@ -80,8 +80,8 @@ void draw() {
     ssidTextbox.DRAW();
     pwTextbox.DRAW();
     
-    // draw buttons  //<>//
-    wifiButton.display(); //<>//
+    // draw buttons  //<>// //<>//
+    wifiButton.display(); //<>// //<>//
   }
   
   if(!comPort.equals("")){
@@ -214,20 +214,18 @@ void sendSerialSpeechMessage(){
   try{
     if(isAudioRecRunning == 2){
       String result = audioRec.recieveRec(isAudioRecListening);
-      if (result.length() > 0) {
+      if(result.length() > 0){
         String resultArr[] = result.split("\\s+");
-        println("word array:");
-        for (String word : resultArr) {
-          println(word); 
-        }
-        if(resultArr.length >= 2 && resultArr[0].equals("niko")){
+        if(resultArr.length >= 2){
+          if(resultArr[0].equals("niko")){
             if(resultArr[1].equals("exit")){
-              exitAudioRec();
+              exitAudioRec(); 
             }
-            else {
-              String command = "$" + resultArr[1];
-              println("Sending to NIKO: " + command);
-              port.write(command);
+            else{
+              String sendString = '$' + resultArr[1];
+              println("Sending to NIKO: " + sendString);
+              port.write(sendString);
+            }
           }
         }
       }

@@ -1,4 +1,6 @@
 #include "Wireless.h"
+#include "MP3.h"
+#include "Servos.h"
 
 // globals initialization
 boolean bluetoothConnected = false;
@@ -57,7 +59,7 @@ void callback(esp_spp_cb_event_t event, esp_spp_cb_param_t *param) {
       // receive audio input from Processing
       readChar = SerialBT.read(); // skip '$'
       while (SerialBT.available()) {
-        // Serial.println("reading audio command..");
+         Serial.println("reading audio command..");
         command += readChar;
         readChar = SerialBT.read();
       }
@@ -84,9 +86,41 @@ void callback(esp_spp_cb_event_t event, esp_spp_cb_param_t *param) {
 }
 
 void handleCommand(String command) {
-  switch (command) {
-    
+  if (command.equals("goodbye")) {
+    Serial.println("goodbye command");
+    playMP3(1);
   }
+  if (command.equals("hello")) {
+    Serial.println("hello command");
+    playMP3(2);
+  }
+  if(command.equals("forward")){
+    Serial.println("forward command");
+    playMP3(3);
+    changeState(forward, 5000);
+  }
+  if(command.equals("backward")){
+    Serial.println("backward command");
+    playMP3(3);
+    changeState(backward, 5000);
+  }
+  if(command.equals("stop")){
+    Serial.println("stop command");
+    playMP3(3);
+    changeState(idle, 0);
+  }
+  if(command.equals("joke")) {
+    // 004 through 007 are jokes, random is exclusive
+    playRandom(4, 8);
+  }
+  if(command.equals("sing")) {
+    // 008 through 013 are jokes, random is exclusive
+    playRandom(8, 14);
+  }
+}
+
+void playRandom(long minimum, long maximum) {
+  playMP3(random(minimum, maximum));
 }
 
 void bluetoothInit() {
