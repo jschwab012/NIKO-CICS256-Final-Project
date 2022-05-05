@@ -62,8 +62,8 @@ void loop() {
 
   //Secondary sensors
   handleGestures();
-  Serial.print("gesture: ");
-  Serial.println(gestureData);
+//  Serial.print("gesture: ");
+//  Serial.println(gestureData);
 
   //Movement
   handleMovement();

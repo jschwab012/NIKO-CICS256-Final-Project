@@ -54,7 +54,6 @@ void setup() {
 }
 
 void draw() {  
-  println("drawing");
   background(150);
   
   // init text
@@ -81,8 +80,8 @@ void draw() {
     ssidTextbox.DRAW();
     pwTextbox.DRAW();
     
-    // draw buttons  //<>// //<>//
-    wifiButton.display();
+    // draw buttons  //<>//
+    wifiButton.display(); //<>//
   }
   
   if(!comPort.equals("")){
@@ -193,7 +192,6 @@ void exitAudioRec(){
   isAudioRecRunning = 0;
   isAudioRecListening = false;
   audioRec.stopRec();
-  
 }
 
 //Set the color of the rec light
@@ -216,18 +214,25 @@ void sendSerialSpeechMessage(){
   try{
     if(isAudioRecRunning == 2){
       String result = audioRec.recieveRec(isAudioRecListening);
-      if(result.contains("niko")){
-        if(result.contains("exit")){
-          exitAudioRec();
+      if (result.length() > 0) {
+        String resultArr[] = result.split("\\s+");
+        println("word array:");
+        for (String word : resultArr) {
+          println(word); 
         }
-        else{
-          String command = "$NIKO$ " + result;
-          println("Sending to NIKO: " + command);
-          port.write(command);
+        if(resultArr.length >= 2 && resultArr[0].equals("niko")){
+            if(resultArr[1].equals("exit")){
+              exitAudioRec();
+            }
+            else {
+              String command = "$" + resultArr[1];
+              println("Sending to NIKO: " + command);
+              port.write(command);
+          }
         }
       }
     }
-  }catch(Exception e){
+  } catch(Exception e){
     e.printStackTrace();
   }
 }
