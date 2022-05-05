@@ -3,14 +3,14 @@
 // globals initialization
 volatile Movement moveState = idle;
 const int moveDegree = 45;
-const int servoPins[4] = {23, 18, 15, 2};
+const int servoPins[4] = {23, 18, 14, 2};
 int leftL = 90;
-int leftF = 90;
+int leftF = 135;
 int rightL = 90-moveDegree;
 int rightF = 90-moveDegree;
 int leftV = 1;
 int rightV = 1;
-int delayTime = 1;
+int delayTime = 3;
 int currTime = millis(); // set to 0?
 boolean stateChanged = false;
 int delayState = 0;
@@ -88,8 +88,8 @@ void handleMovement() { // might just move into the loop function
           leftL += signbit(90 - leftL) ? -1 : 1;
           servos[0].write(leftL);
         }
-        if(leftF != 90){
-          leftF += signbit(90 - leftF) ? -1 : 1;
+        if(leftF != 135){
+          leftF += signbit(135- leftF) ? -1 : 1;
           servos[2].write(leftF);
         }
         if(rightL != 90){
@@ -108,7 +108,7 @@ void handleMovement() { // might just move into the loop function
       }
       case forward:{
         leftL = constrain(leftL, 90, 90+moveDegree);
-        leftF = constrain(leftF, 90, 90+moveDegree);
+        leftF = constrain(leftF, 135, 135+moveDegree);
         rightL = constrain(rightL, 90-moveDegree, 90);
         rightF = constrain(rightF, 90-moveDegree, 90);
         leftL += leftV;
@@ -152,7 +152,7 @@ void handleMovement() { // might just move into the loop function
       }
       case backward:{
         leftL = constrain(leftL, 100-moveDegree, 100);
-        leftF = constrain(leftF, 90, 90+moveDegree);
+        leftF = constrain(leftF, 135, 135+moveDegree);
         rightL = constrain(rightL, 80, 80+moveDegree);
         rightF = constrain(rightF, 90-moveDegree, 90);
         leftL += leftV;
@@ -196,7 +196,7 @@ void handleMovement() { // might just move into the loop function
       }
       case turnRight:{
         leftL = constrain(leftL, 90, 90+moveDegree+30);
-        leftF = constrain(leftF, 90, 90+moveDegree);
+        leftF = constrain(leftF, 135, 135+moveDegree);
         rightL = constrain(rightL, 90-moveDegree, 90);
         rightF = constrain(rightF, 90-moveDegree, 90);
         leftL += leftV;

@@ -1,5 +1,6 @@
 #include "I2C_Devices.h"
 #include "Servos.h"
+#include "Wireless.h"
 
 // globals initialization
 const int LCD_ADDR = 0x3F;
@@ -42,6 +43,10 @@ void LCDPrint(const char* message1, const char* message2) {
   // set cursor to first column, second row
   LCD.setCursor(0,1);
   LCD.print(message2);
+}
+
+void LCDPrintSmile() {
+  LCDPrint("               _", " _____________/ ");
 }
 
 // eye functions (some of these are kinda funky cause most of the time, each eye will do the same thing, but we want the option
@@ -96,7 +101,7 @@ void edgeSensorInit() {
 void handleEdgeDetection() {
   if(millis() > edgeSensorDelay){
     int edgeSensorVal = EDGE_SENSOR.readRangeSingleMillimeters();
-    Serial.print("edge: "); Serial.println(edgeSensorVal);
+//    Serial.print("edge: "); Serial.println(edgeSensorVal);
     if(edgeSensorVal > edgeFallingThreshold){ //FALLING
       overrideState(backward);
       edgeFallingFlag = true;
@@ -170,7 +175,16 @@ void handleGestures(){
       changeState(forward, 5000); //Away from sensor
       break;
     }
-    
+//
+//    case GES_UP_FLAG: {
+//      displayWeather();
+//      break;
+//    }
+
+    case GES_DOWN_FLAG: {
+      LCDPrint("               _", " _____________/ "); // smiley face :)
+      break;
+    }
     default:{
       
       break;

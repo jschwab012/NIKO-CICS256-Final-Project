@@ -50,10 +50,11 @@ void setup() {
  initLayout();
  
  //Init voice recognition
- initAudioRec();
+ thread("initAudioRec");
 }
 
 void draw() {  
+  println("drawing");
   background(150);
   
   // init text
@@ -80,7 +81,7 @@ void draw() {
     ssidTextbox.DRAW();
     pwTextbox.DRAW();
     
-    // draw buttons 
+    // draw buttons  //<>// //<>//
     wifiButton.display();
   }
   
@@ -90,8 +91,11 @@ void draw() {
   }
   //send recognized audio here
   sendSerialSpeechMessage();
-  
 }
+
+//void processAudioRec() {
+  
+//}
 
 void initLayout() {
   // init textbox objects
@@ -118,10 +122,11 @@ void mousePressed() {
       comPort = comTextbox.Text;
       // PORT OPENING COMMENTED OUT FOR DEBUGGING PURPOSES
       if (port == null) {
-          //println("Current serial list: ");
-          //printArray(Serial.list());
-          //println("opening bluetooth serial port");
+          println("Current serial list: ");
+          printArray(Serial.list());
+          println("opening bluetooth serial port");
           try {
+            println("test print");
             port = new Serial(this, comPort, 115200);
             port.write(';');
           } catch (RuntimeException e) {
