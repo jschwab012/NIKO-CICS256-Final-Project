@@ -1,4 +1,4 @@
-<h1>NIKO The Desk Assistant Robot</h1>
+<h1>NIKO, The Desk Assistant Robot</h1>
 
 Demo site: https://sites.google.com/umass.edu/niko/home?authuser=1
 
