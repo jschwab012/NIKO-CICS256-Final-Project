@@ -109,14 +109,14 @@ void handleCommand(String command) {
     playMP3(3);
     changeState(idle, 0);
   }
-  if(command.equals("joke")) {
-    // 004 through 007 are jokes, random is exclusive
-    playRandom(4, 8);
-  }
-  if(command.equals("sing")) {
-    // 008 through 013 are jokes, random is exclusive
-    playRandom(8, 14);
-  }
+//  if(command.equals("joke")) {
+//    // 004 through 007 are jokes, random is exclusive
+//    playRandom(4, 8);
+//  }
+//  if(command.equals("sing")) {
+//    // 008 through 013 are jokes, random is exclusive
+//    playRandom(8, 14);
+//  }
 }
 
 void playRandom(long minimum, long maximum) {
