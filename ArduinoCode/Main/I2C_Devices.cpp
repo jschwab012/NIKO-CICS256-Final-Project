@@ -58,11 +58,7 @@ void eyesInit() {
   EYES.clearDisplay();         // clear software buffer
   EYES.setTextColor(WHITE);    // set text color
   EYES.display();
-  // init EYE_R
-//  EYE_R.begin(SSD1306_SWITCHCAPVCC, OLED_ADDR); // init
-//  EYE_R.clearDisplay();         // clear software buffer
-//  EYE_R.setTextColor(WHITE);    // set text color
-//  EYE_R.display();
+
   // TODO: draw eyes?
   wakeUp();
 }
@@ -95,13 +91,11 @@ void displayEyeMessage(const char* message) {
 void edgeSensorInit() {
   EDGE_SENSOR.init();
   EDGE_SENSOR.setTimeout(500);
-//  EDGE_SENSOR.startContinuous();
 }
 
 void handleEdgeDetection() {
   if(millis() > edgeSensorDelay){
     int edgeSensorVal = EDGE_SENSOR.readRangeSingleMillimeters();
-//    Serial.print("edge: "); Serial.println(edgeSensorVal);
     if(edgeSensorVal > edgeFallingThreshold){ //FALLING
       overrideState(backward);
       edgeFallingFlag = true;

@@ -31,41 +31,12 @@ void setup() {
   pinMode(35, INPUT);
   servosInit();
 }
-
-void loop() {
-//  unsigned long startTime = millis();
-//  LCDPrint("This is a", "test print!");
-////  displayEyeMessage("This\ is a test print for the right eye!", &EYE_R);
-//  displayEyeMessage("This is a test print for the left eye!", &EYE_L);
-////  EDGE_SENSOR.readRangeContinuousMillimeters();
-////  digitalRead(IR_PIN);
-////  paj7620ReadReg(GESTURE_ADDR, 1, &gestureData);
-//  Serial.print("Edge sensor reading: "); //Serial.println(EDGE_SENSOR.readRangeContinuousMillimeters());
-//  Serial.print("IR sensor reading: "); Serial.println(digitalRead(IR_PIN));
-//  Serial.print("Gesture sensor reading: "); Serial.print(paj7620ReadReg(GESTURE_ADDR, 1, &gestureData)); Serial.print(" "); Serial.println(gestureData);
-//  unsigned long endTime = millis();
-//  // gyro would be here if I knew how to read it
-//  Serial.print("Executing all scan operations took: "); Serial.println(endTime - startTime);
-//  delay(2000);
-
-//  Serial.println(moveState);
-// if(digitalRead(0) == LOW){
-//    changeState(forward, 5000);
-//  }
-//  else if(digitalRead(34) == LOW){
-//    changeState(backward, 5000);
-//  }
-//  else if(digitalRead(35) == LOW){
-//    changeState(idle, 0);
-//  }
   //Main sensors (IR, light)
   handleIRDetection();
   handleEdgeDetection();
 
   //Secondary sensors
   handleGestures();
-//  Serial.print("gesture: ");
-//  Serial.println(gestureData);
 
   //Movement
   handleMovement();

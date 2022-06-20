@@ -130,8 +130,6 @@ void handleMovement() { // might just move into the loop function
           leftV = -leftV;
           rightV = -rightV;
         }
-  //      if(rightL <= 90-moveDegree || rightL >= 90){
-  //      }
         servos[0].write(leftL);
         servos[1].write(rightL);
         servos[2].write(leftF);
@@ -174,8 +172,6 @@ void handleMovement() { // might just move into the loop function
           leftV = -leftV;
           rightV = -rightV;
         }
-  //      if(rightL <= 90-moveDegree || rightL >= 90){
-  //      }
         servos[0].write(leftL);
         servos[1].write(rightL);
         servos[2].write(leftF);
@@ -218,10 +214,10 @@ void handleMovement() { // might just move into the loop function
           leftV = -leftV;
           rightV = -rightV;
         }
-        if(rightL <= 90-moveDegree || rightL >= 90){
+//        if(rightL <= 90-moveDegree || rightL >= 90){
   //        leftV = -leftV;
   //        rightV = -rightV;
-        }
+//        }
         servos[0].write(leftL);
         servos[1].write(rightL);
         servos[2].write(leftF);
