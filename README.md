@@ -1,6 +1,6 @@
 <h1>NIKO, The Desk Assistant Robot</h1>
 
-Demo site: https://sites.google.com/umass.edu/niko/home?authuser=1
+Demo site: [Home](https://sites.google.com/umass.edu/niko/home?authuser=1), [Images and Video](https://sites.google.com/umass.edu/niko/images?authuser=1)
 
 NIKO is a walking, talking desk buddy robot was our final project for the course "CICS256: MAKE: A Hands-On Introduction to Physical Computing".
 
