@@ -31,6 +31,7 @@ void setup() {
   pinMode(35, INPUT);
   servosInit();
 }
+void loop(){
   //Main sensors (IR, light)
   handleIRDetection();
   handleEdgeDetection();
